@@ -6,7 +6,7 @@ class MixBase:
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Food(MixBase,models.Model):
+class Food(MixBase, models.Model):
     FOOD_TYPES = (
         ('meat', 'Meat'),
         ('fruit', 'Fruit'),
@@ -22,6 +22,7 @@ class Food(MixBase,models.Model):
     def __str__(self):
         return self.name
 
+
 class CartRow(MixBase, models.Model):
     food = models.ForeignKey(Food, on_delete=models.SET_NULL)
     quantity = models.PositiveIntegerField(default=0)
@@ -30,11 +31,13 @@ class CartRow(MixBase, models.Model):
     def __str__(self):
         return "CartRow {}".format(self.id)
 
+
 class Cart(MixBase, models.Model):
     rows = models.ManyToManyField(CartRow, through=CartRow)
 
     def __str__(self):
         return "Cart {}".format(self.id)
+
 
 class Order(MixBase, models.Model):
     STATUS = (
@@ -46,5 +49,4 @@ class Order(MixBase, models.Model):
     cart = models.OneToOneField(Cart)
     # owner
     status = models.CharField(max_length=1, choices=STATUS)
-
 
