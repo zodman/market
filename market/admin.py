@@ -36,6 +36,7 @@ class CartAdmin(NonSortableParentAdmin):
 class FoodAdmin(admin.ModelAdmin):
     list_display = ("name", "type", "price")
     search_fields = ("name", "type")
+    list_filter = ("type",)
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("__str__", "cart", "status", "user")
