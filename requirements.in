@@ -1,6 +1,7 @@
 # core
 django
 django-seed
+django-admin-sortable
 
 # tools
 fabric
