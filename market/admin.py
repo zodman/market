@@ -5,6 +5,7 @@ from .models import Cart, CartRow, Food, Order
 class RowInline(admin.TabularInline):
     model = CartRow
     raw_id_fields = ("food",)
+    readonly_fields =("price", )
 
 
 class CartAdmin(admin.ModelAdmin):

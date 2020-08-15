@@ -1,4 +1,10 @@
 from django.db import models
+from django.core.validators import MinValueValidator
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class MixBase:
@@ -29,11 +35,20 @@ class CartRow(MixBase, models.Model):
                              on_delete=models.SET_NULL, null=True)
     cart = models.ForeignKey("Cart", related_name="cart_rows",
                              on_delete=models.SET_NULL, null=True)
-    quantity = models.PositiveIntegerField(default=0)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1,
+                                           validators=[MinValueValidator(limit_value=1)])
+    price = models.DecimalField(max_digits=8, decimal_places=2, default=0,
+                                editable=False, verbose_name="Unit price")
 
     def __str__(self):
         return "CartRow {}".format(self.id)
+
+
+@receiver(pre_save, sender=CartRow)
+def pre_save_row(sender, **kwargs):
+    instance = kwargs.get("instance")
+    instance.price = instance.food.price
+    return instance
 
 
 class Cart(MixBase, models.Model):
@@ -42,6 +57,8 @@ class Cart(MixBase, models.Model):
 
     def __str__(self):
         return "Cart {}".format(self.id)
+
+
 
 
 class Order(MixBase, models.Model):
