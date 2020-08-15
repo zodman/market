@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from adminsortable.models import SortableMixin
 from adminsortable.fields import SortableForeignKey
 
@@ -68,17 +68,27 @@ class Cart(MixBase, models.Model):
         return "Cart {}".format(self.id)
 
 
-
-
 class Order(MixBase, models.Model):
+    NEW = 'n'
+    SEND = 's'
+    RECEIVED = 'r'
+    CANCELLED = 'c'
     STATUS = (
-        ('n', 'New'),
-        ('s', 'Send'),
-        ('r', 'Received'),
-        ('c', 'Cancelled'),
+        (NEW, 'New'),
+        (SEND, 'Send'),
+        (RECEIVED, 'Received'),
+        (CANCELLED, 'Cancelled'),
     )
     cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True)
-    status = models.CharField(max_length=1, choices=STATUS)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.CharField(max_length=1, choices=STATUS, default=NEW)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
+    def __str__(self):
+        return "Order {}".format(self.id)
 
+@receiver(post_save, sender=Cart)
+def create_order(sender, **kwargs):
+    is_created = kwargs.get("created")
+    instance = kwargs.get("instance")
+    if is_created:
+        Order.objects.create(cart=instance) 
