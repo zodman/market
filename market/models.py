@@ -18,13 +18,17 @@ class Food(MixBase, models.Model):
     )
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=11, choices=FOOD_TYPES)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
 
     def __str__(self):
         return self.name
 
 
 class CartRow(MixBase, models.Model):
-    food = models.ForeignKey(Food, on_delete=models.SET_NULL)
+    food = models.ForeignKey("Food", related_name="cart_foods",
+                             on_delete=models.SET_NULL, null=True)
+    cart = models.ForeignKey("Cart", related_name="cart_rows",
+                             on_delete=models.SET_NULL, null=True)
     quantity = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=8, decimal_places=2)
 
@@ -33,7 +37,8 @@ class CartRow(MixBase, models.Model):
 
 
 class Cart(MixBase, models.Model):
-    rows = models.ManyToManyField(CartRow, through=CartRow)
+    rows = models.ManyToManyField(Food, related_name="carts", through=CartRow,
+                                  through_fields=("cart", "food"))
 
     def __str__(self):
         return "Cart {}".format(self.id)
@@ -46,7 +51,6 @@ class Order(MixBase, models.Model):
         ('r', 'Received'),
         ('c', 'Cancelled'),
     )
-    cart = models.OneToOneField(Cart)
+    cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True)
     # owner
     status = models.CharField(max_length=1, choices=STATUS)
-
