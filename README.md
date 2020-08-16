@@ -1,5 +1,8 @@
 # market
 
+[![Coverage Status](https://coveralls.io/repos/github/zodman/market/badge.svg?branch=master)](https://coveralls.io/github/zodman/market?branch=master)
+
+![Django CI](https://github.com/zodman/market/workflows/Django%20CI/badge.svg?branch=master)
 
 
 # Plan
