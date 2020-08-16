@@ -1,0 +1,51 @@
+{
+  "name": "market",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "runserver": "cross-env PYTHONUNBUFFERED=1 python manage.py runserver",
+    "parcel": "parcel watch market/static/market/src/* -d market/static/market/dist/ --public-url /static/market/dist/",
+    "build": "parcel build market/static/market/src/* -d market/static/market/dist/ --public-url /static/market/dist/",
+    "dev": "concurrently npm:parcel npm:runserver",
+    "test_django": "python manage.py test"
+  },
+  "posthtml": {
+    "recognizeSelfClosing": true
+  },
+  "watchreload": {
+    "files": [
+      "**/*.py",
+      "**/templates/**/*.html"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zodman/market.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zodman/market/issues"
+  },
+  "homepage": "https://github.com/zodman/market#readme",
+  "dependencies": {
+    "@inertiajs/inertia": "^0.1.9",
+    "@inertiajs/inertia-vue": "^0.1.4",
+    "axios": "^0.19.2",
+    "bulma": "^0.9.0",
+    "concurrently": "^5.3.0",
+    "cross-env": "^7.0.2",
+    "dinero.js": "^1.8.1",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-watch-reload": "^1.0.3",
+    "portal-vue": "^2.1.7",
+    "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.2.0",
+    "sass": "^1.26.10",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
