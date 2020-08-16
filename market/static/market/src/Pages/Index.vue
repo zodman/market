@@ -5,7 +5,7 @@
             <div class="control ">
               <div class="select">
                 <select v-model="foodSelected">
-                  <option v-for="food in foods" :value="food" >{{food.name}}</option>
+                  <option v-for="food in foods" >{{food.name}}</option>
                 </select>
               </div>
             </div>
