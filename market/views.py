@@ -1,5 +1,4 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import generics
 from django.shortcuts import render
 from inertia.views import render_inertia
 from .models import Food, Order
@@ -13,13 +12,9 @@ def index(request):
     return render_inertia(request, "Index", context)
 
 
-
-class OrderList(APIView):
-
-    def get(self, response):
-        orders = Order.objects.all()
-        data = OrderSerializer(orders, many=True).data
-        return Response(data)
+class OrderList(generics.ListAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
 
 order_list = OrderList.as_view()
