@@ -26,15 +26,20 @@ foodNames = [
 ]
 
 
-seeder = Seed.seeder()
-seeder.add_entity(Food,20, {
-    'name': lambda x: seeder.faker.random_element(elements=foodNames)
-})
-result = seeder.execute()
-log.info(f"Initialize db with Foods created: {len(result[Food])}")
+def init_data():
+    seeder = Seed.seeder()
+    seeder.add_entity(Food,20, {
+        'name': lambda x: seeder.faker.random_element(elements=foodNames)
+    })
+    result = seeder.execute()
+    log.info(f"Initialize db with Foods created: {len(result[Food])}")
 
-if not User.objects.filter(username="admin").exists():
-    created = User.objects.create_superuser("admin", "admin@example.com", "admin")
-    log.info(f"superuser created {created}")
+def init_admin():
+    if not User.objects.filter(username="admin").exists():
+        created = User.objects.create_superuser("admin", "admin@example.com", "admin")
+        log.info(f"superuser created {created}")
 
 
+if __name__ == "__main__":
+    init_data()
+    init_admin()
