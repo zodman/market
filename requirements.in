@@ -1,9 +1,11 @@
 # core
 django
 django-seed
-django-admin-sortable
+django-js-routes
+git+https://github.com/zodman/inertia-django/
 
 # tools
 fabric
+patchwork
 
 

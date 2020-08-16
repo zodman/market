@@ -3,8 +3,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
-from adminsortable.models import SortableMixin
-from adminsortable.fields import SortableForeignKey
+from decimal import Decimal
 
 import logging
 
@@ -34,8 +33,8 @@ class Food(MixBase, models.Model):
         return self.name
 
 
-class CartRow(MixBase, SortableMixin):
-    food = SortableForeignKey("Food", related_name="cart_foods",
+class CartRow(MixBase, models.Model):
+    food = models.ForeignKey("Food", related_name="cart_foods",
                              on_delete=models.SET_NULL, null=True)
     cart = models.ForeignKey("Cart", related_name="cart_rows",
                              on_delete=models.SET_NULL, null=True)
@@ -56,9 +55,16 @@ class CartRow(MixBase, SortableMixin):
 @receiver(pre_save, sender=CartRow)
 def pre_save_row(sender, **kwargs):
     instance = kwargs.get("instance")
+    # copy the price from the food
     instance.price = instance.food.price
     return instance
 
+@receiver(post_save, sender=CartRow)
+def post_save_row(sender, **kwargs):
+    # update the total price of the order
+    instance = kwargs.get("instance")
+    instance.cart.order.update_total()
+    instance.cart.order.save()
 
 class Cart(MixBase, models.Model):
     rows = models.ManyToManyField(Food, related_name="carts", through=CartRow,
@@ -67,6 +73,13 @@ class Cart(MixBase, models.Model):
     def __str__(self):
         return "Cart {}".format(self.id)
 
+@receiver(post_save, sender=Cart)
+def create_order(sender, **kwargs):
+    is_created = kwargs.get("created")
+    instance = kwargs.get("instance")
+    if is_created:
+        order = Order(cart=instance)
+        order.save()
 
 class Order(MixBase, models.Model):
     NEW = 'n'
@@ -81,14 +94,22 @@ class Order(MixBase, models.Model):
     )
     cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=1, choices=STATUS, default=NEW)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    total = models.DecimalField(max_digits=8, decimal_places=2, editable=False) 
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
+                             blank=True)
+
+    def update_total(self):
+        total = Decimal(0)
+        for row in self.cart.cart_rows.all():
+            total += row.quantity*row.price
+        self.total = total
 
     def __str__(self):
         return "Order {}".format(self.id)
 
-@receiver(post_save, sender=Cart)
-def create_order(sender, **kwargs):
-    is_created = kwargs.get("created")
+
+@receiver(pre_save, sender=Order)
+def pre_save_order(sender, **kwargs):
     instance = kwargs.get("instance")
-    if is_created:
-        Order.objects.create(cart=instance) 
+    instance.update_total()
+    return instance
