@@ -53,7 +53,7 @@
 <script>
 
 const fit = (number) => {
- return parseFloat(number).toPrecision(2);
+ return parseFloat(number).toFixed(2);
 }
 
 export default {
