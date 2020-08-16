@@ -17,4 +17,15 @@ class OrderList(generics.ListAPIView):
     serializer_class = OrderSerializer
 
 
+class OrderDetail(generics.RetrieveDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+
+# TODO: Delete order
+# TODO: update order
+order_detail = OrderDetail.as_view()
 order_list = OrderList.as_view()
+
+
+

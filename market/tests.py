@@ -21,13 +21,15 @@ class OrderTestApi(TestCase):
         self.get_check_200('market:order_list')
         self.assertTrue(len(self.last_response.json()) > 10)
 
-    def __test_create_orders(self):
-        cart = Cart.objects.all()[0]
-        data = {
-            'cart': cart.id,
-        }
-        self.post('market:order_list', data=data)
-        print(self.last_response.json())
+    def test_detail_destroy_order(self):
+        qs = Order.objects.all()
+        count = qs.count()
+        order = qs[0]
+        self.get('market:order_detail', pk=order.id)
         self.assert_http_200_ok()
+        self.delete('market:order_detail', pk=order.id)
+        self.response_204()
+        newcount = Order.objects.all().count()
+        self.assertTrue(count != newcount, (count, newcount))
 
 

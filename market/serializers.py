@@ -6,7 +6,7 @@ from .models import Food, Order
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ["cart",]
+        fields = ["cart","total", "user"]
 
 
 class FoodSerializer(serializers.ModelSerializer):
