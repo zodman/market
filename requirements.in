@@ -3,6 +3,7 @@ django
 django-seed
 django-js-routes
 git+https://github.com/zodman/inertia-django/
+django-rest-framework
 
 # tools
 fabric

@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -27,6 +28,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "market",
     "django_seed",
+    "js_routes",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +124,11 @@ LOGGING = {
         },
     },
 }
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+
+JS_ROUTES_INCLUSION_LIST = [
+    'market',
+]
+

@@ -29,6 +29,10 @@ class Food(MixBase, models.Model):
     type = models.CharField(max_length=11, choices=FOOD_TYPES)
     price = models.DecimalField(max_digits=8, decimal_places=2)
 
+
+    class Meta:
+        ordering = ("name",)
+
     def __str__(self):
         return self.name
 
