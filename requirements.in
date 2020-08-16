@@ -9,6 +9,10 @@ django-test-plus
 # tools
 fabric
 patchwork
+django-webserver[gunicorn]
 
 # test
 coverage
+django-test-plus
+coveralls
+

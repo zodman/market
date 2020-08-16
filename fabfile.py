@@ -22,3 +22,17 @@ def test(c):
 def log(ctx):
     run("pip-compile requirements.in -o requirements.txt")
 
+
+@task
+def deploy(ctx):
+    run("npm install", echo=True)
+    run("npm run build", echo=True)
+    run("python manage.py collectstatic --noinput", echo=True)
+    run("find . -name '__pycache__' |xargs rm -rf ", echo=True)
+    rsync(ctx, ".", "apps/market", exclude=exclude_dirs)
+    with ctx.cd("apps/market"):
+        with ctx.prefix("source ~/.virtualenvs/market/bin/activate"):
+            ctx.run("pip install -r requirements.txt")
+            ctx.run("python manage.py migrate")
+    ctx.run("sudo supervisorctl restart market")
+

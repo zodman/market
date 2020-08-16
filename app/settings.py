@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "django_seed",
     "js_routes",
     "rest_framework",
+    "django_webserver",
 ]
 
 MIDDLEWARE = [
