@@ -1,23 +1,19 @@
 <template>
 <div class="container">
 
-  <div class="field ">
-    <label class="label" for="">Food: </label>
-    <div class="control">
-      <div class="select">
-        <select v-model="foodSelected">
-          <option v-for="food in foods" :value="food" >{{food.name}}</option>
-        </select>
-      </div>
-    </div>
-    <div class="control">
-      <button class="button is-info" v-on:click="addFood()">+</button>
-    </div>
-  </div>
-
-
+        <div class="field is-grouped">
+            <div class="control ">
+              <div class="select">
+                <select v-model="foodSelected">
+                  <option v-for="food in foods" :value="food" >{{food.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="control">
+              <button class="button is-info" v-on:click="addFood()">+</button>
+            </div>
+          </div>
   <table class="table is-fullwidth">
-
     <tr>
       <th>Name</th>
       <th>Unit Price</th>
@@ -38,12 +34,18 @@
          {{calcPrice(food)}}
        </td>
        <td>
-        <button class="button is-small" v-on:click="removeRow(food)">-</button>
+        <button class="button is-small is-danger" v-on:click="removeRow(food)">-</button>
        </td>
     </tr>
     <tr>
-      <td colspan="3"> Total</td>
+      <td colspan="3" class="has-text-right"> Total</td>
       <td>{{bigTotal}}</td>
+    </tr>
+    <tr>
+      <td colspan="3"></td>
+      <td colspan="2">
+        <button class="button is-success">Send Order</button>
+      </td>
     </tr>
   </table>
 </div>
@@ -73,7 +75,7 @@ export default {
       return fit(food.price*food.quantity);
     },
     removeQuantity(food) {
-      if (food.quantity > 0) {
+      if (food.quantity > 1) {
         food.quantity-=1;
       }
       this.updateTotal();
