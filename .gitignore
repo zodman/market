@@ -148,3 +148,4 @@ dmypy.json
 
 node_modules
 market/static/market/dist
+static/
