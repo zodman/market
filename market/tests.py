@@ -31,7 +31,6 @@ class OrderTestApi(TestCase):
         """ check if the index works with inertia"""
         r = Order.objects.all()
         self.assertTrue(r.exists())
-
         self.get_check_200("market:index")
         self.assertInContext("page")
 

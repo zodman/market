@@ -115,7 +115,7 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler",},},
     "root": {"handlers": ["console"], "level": "INFO",},
     "loggers": {
-        "market.models": {
+        "market": {
             "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
