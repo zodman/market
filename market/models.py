@@ -25,7 +25,7 @@ class Food(MixBase, models.Model):
         ("beverage", "Beverage"),
         ("bread", "Bread"),
     )
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     type = models.CharField(max_length=11, choices=FOOD_TYPES)
     price = models.DecimalField(max_digits=8, decimal_places=2)
 
@@ -55,8 +55,8 @@ class CartRow(MixBase, models.Model):
 def pre_save_row(sender, **kwargs):
     instance = kwargs.get("instance")
     # copy the price from the food
-    instance.price = instance.food.price
-    return instance
+    if instance.price == 0:
+        instance.price = instance.food.price
 
 
 @receiver(post_save, sender=CartRow)
@@ -69,7 +69,8 @@ def post_save_row(sender, **kwargs):
 
 class Cart(MixBase, models.Model):
     rows = models.ManyToManyField(
-        Food, related_name="carts", through=CartRow, through_fields=("cart", "food")
+        Food, related_name="carts", through=CartRow,
+        through_fields=("cart", "food")
     )
 
     def __str__(self):
@@ -106,6 +107,7 @@ class Order(MixBase, models.Model):
         for row in self.cart.cart_rows.all():
             total += row.quantity * row.price
         self.total = total
+        return total
 
     def __str__(self):
         return "Order {}".format(self.id)

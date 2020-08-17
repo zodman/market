@@ -13,7 +13,7 @@ from django_seed import Seed
 from market.models import Food
 from django.contrib.auth.models import User
 
-foodNames = [
+foodNames = set([
     "Cheese Pizza",
     "Hamburger",
     "Cheeseburger",
@@ -57,13 +57,13 @@ foodNames = [
     "Cream",
     "Milk",
     "Custard",
-]
+])
 
 
 def init_data():
     seeder = Seed.seeder()
     seeder.add_entity(
-        Food, 20, {"name": lambda x: seeder.faker.random_element(elements=foodNames)}
+        Food, 20, {"name": lambda x:foodNames.pop()}
     )
     result = seeder.execute()
     log.info(f"Initialize db with Foods created: {len(result[Food])}")

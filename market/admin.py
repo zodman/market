@@ -18,7 +18,7 @@ class RowInline(admin.TabularInline):
 
 class CartAdmin(admin.ModelAdmin):
     inlines = [RowInline]
-    list_display = ("id", "get_order", "order_status")
+    list_display = ("id", "get_order", "order_status", "elements", "total")
 
     def get_order(self, obj):
         order = obj.order
@@ -33,6 +33,14 @@ class CartAdmin(admin.ModelAdmin):
         return status.get(obj.order.status)
 
     order_status.admin_order_field = "order__status"
+
+    def total(self, obj):
+        return obj.order.update_total()
+
+    total.admin_order_field = "order__total"
+
+    def elements(self, obj):
+        return obj.rows.count()
 
 
 class FoodAdmin(admin.ModelAdmin):
