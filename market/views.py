@@ -13,7 +13,7 @@ from .serializers import CustomRow
 
 
 def login(request):
-    return render_inertia(request, "Index", {})
+    return render_inertia(request, "Login", {})
 
 
 def index(request):

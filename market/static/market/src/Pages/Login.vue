@@ -1,5 +1,6 @@
 <template>
- <div class="hero is-success is-fullheight">
+<div id="login">
+ <div class="hero is-success ">
         <div class="hero-body">
             <div class="container has-text-centered">
                 <div class="column is-4 is-offset-4">
@@ -11,26 +12,36 @@
                         </figure>
 
 										<form>
-										
+                       <div class="field">
+                        <div class="control">
+                            <input type="text" class="input is-large" placeholder="Username">
+                        </div>
+                      </div>
 
-      <button :disabled="form.busy" type="submit" class="button is-block is-info is-large is-fullwidth" :class="{'is-loading': form.busy}">
+
+                       <div class="field">
+                        <div class="control">
+                            <input type="text" class="input is-large" placeholder="Password">
+                        </div>
+                      </div>
+
+      <button  type="submit" class="button is-block is-info is-large is-fullwidth">
         Log In
       </button>	
 
 										</form>
-
-
 										</div>
-                    <p class="has-text-grey">
-                        <a href="../">Sign Up</a> &nbsp;·&nbsp;
-                        <a href="../">Forgot Password</a> &nbsp;·&nbsp;
-                        <a href="../">Need Help?</a>
-                    </p>
+  <p class="has-text-grey">
+    <inertia-link :href="route('market:index')">Go to Index</inertia-link>
+  </p>
+
+
                 </div>
             </div>
         </div>
     </div>
 
+</div>
 </template>
 
 
@@ -47,3 +58,5 @@ export default {
   }
 }
 </script>
+
+
