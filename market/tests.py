@@ -2,6 +2,8 @@ from test_plus.test import TestCase
 from rest_framework.test import APIClient
 from django_seed import Seed
 from .models import Food, Order, Cart, CartRow
+from .serializers import FoodSerializer
+from decimal import Decimal
 
 
 class ModelTest(TestCase):
@@ -25,7 +27,28 @@ class OrderTestApi(TestCase):
         seed.add_entity(Cart, 10)
         seed.add_entity(Food, 10)
         seed.execute()
+        self.seed = seed
         self.user = self.make_user()
+
+    def test_create_cart(self):
+        foods = Food.objects.all()
+        data_list = []
+        for f in foods:
+            data_list.append(dict(food=f.id, 
+                    quantity=self.seed.faker.random_digit_not_null()))
+        data = data_list
+
+        total = sum(map(
+            lambda x: 
+                x["quantity"]*Food.objects.get(id=x["food"]).price,
+            data))
+        with self.login(username=self.user.username):
+            self.post("market:create_cart", data=data, 
+                        extra={'format':'json'})
+        self.assert_http_200_ok()
+        response = self.last_response.json()
+        self.assertTrue(response["user"]== self.user.id)
+        self.assertTrue(Decimal(response["total"])==total)
 
     def test_check_orders(self):
         """ check if the index works with inertia"""
