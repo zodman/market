@@ -7,27 +7,50 @@ from rest_framework import filters
 from inertia.views import render_inertia
 from inertia.share import share_flash
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, logout as django_logout
+from django.contrib.auth import login as django_login
+from django.urls import reverse
 from .models import Food, Order, Cart, CartRow
 from .serializers import FoodSerializer, OrderSerializer
 from .serializers import CustomRow
+import json
+
+
+def logout(request):
+    django_logout(request)
+    return redirect(reverse("market:login"))
 
 
 def login(request):
-    return render_inertia(request, "Login", {})
+    if request.user.is_authenticated:
+        return redirect(reverse("market:index"))
+    if request.method == "POST":
+        data = json.loads(request.body)
+        username = data.get("email")
+        password = data.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            django_login(request, user)
+            return redirect(reverse("market:index"))
+        else:
+            share_flash(request, error="username wrongly")
+    return render_inertia(request, "Login")
 
 
+@login_required
 def index(request):
     foods = Food.objects.all()
     context = {
-        "foods": FoodSerializer(foods, many=True).data
+        "foods": FoodSerializer(foods, many=True).data,
+        "user": request.user.username
     }
-    if request.user.is_authenticated:
-        context["user"] = request.user.username
     return render_inertia(request, "Index", context)
 
 
 class CreateCart(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request, format=None):
         rows = CustomRow(data=request.data, many=True)
         if not request.user.is_authenticated:
@@ -45,11 +68,11 @@ class CreateCart(APIView):
             cart.order.update_total()
             cart.order.user = request.user
             cart.order.save()
-            msg = (f"Orden with id: {cart.order.id} was created with"
-                 f"{cart.rows.count()} elements with total as {cart.order.total}")
-            share_flash(request, msg) 
+            msg = (f"Orden with id: {cart.order.id} was created with "
+                   f"{cart.rows.count()} elements with total as "
+                   f"{cart.order.total}")
+            share_flash(request, msg)
         return redirect("market:index")
-            #return Response(OrderSerializer(cart.order).data)
 
 
 class OrderList(generics.ListAPIView):

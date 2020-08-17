@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <flash-messages />
-  <h1 class="subtitle">Cart</h1>
+    <h1 class="subtitle">Cart of {{user}} <small><inertia-link :href="route('market:logout')">logout</inertia-link></small></h1>
         <div class="field is-grouped">
             <div class="control ">
               <div class="select">
@@ -66,7 +66,8 @@ const fit = (number) => {
 export default {
   name: 'Index',
   props: {
-    foods: Array
+    foods: Array,
+    user: String
   },
   components:{
     FlashMessages

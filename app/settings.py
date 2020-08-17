@@ -141,4 +141,6 @@ REST_FRAMEWORK = {
     # ),
 }
 
+# Login redirect
+LOGIN_URL="/login"
 
