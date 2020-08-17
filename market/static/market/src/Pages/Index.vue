@@ -45,7 +45,9 @@
     <tr>
       <td colspan="3"></td>
       <td colspan="2">
-        <button class="button is-success">Send Order</button>
+        <button v-on:click="submitOrder()" v-bind:class="{'is-loading':sending}"
+          v-bind:disabled="sending || rows.length==0" 
+                class="button is-success">Send Order</button>
       </td>
     </tr>
   </table>
@@ -71,6 +73,7 @@ export default {
   },
   data() {
     return {
+      sending: false,
       foodSelected: false,
       rows:[],
       bigTotal: 0,
@@ -91,10 +94,10 @@ export default {
       this.updateTotal();
     },
     addFood() {
-      console.log("add food", this.foodSelected.name);
       let row = JSON.parse(JSON.stringify(this.foodSelected));
       // init quantity yey!!
       row.quantity=1;
+      row.food = row.id;
       this.rows.push(row);
       this.updateTotal();
     },
@@ -106,6 +109,12 @@ export default {
       let rowsTotal = this.rows.map(e => e.quantity*e.price);
       // TODO: fix the biggerFloat
       this.bigTotal = fit(rowsTotal.reduce( (a,b) => a+b));
+    },
+    submitOrder() {
+      this.sending = true;
+      this.$inertia.post(this.route('market:create_cart'), this.rows).then(() => {
+        this.sending = false;
+      });
     }
   }
 }

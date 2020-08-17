@@ -147,5 +147,5 @@ dmypy.json
 .pytype/
 
 node_modules
-market/static/market/dist
-static/
+market/static/market/dist/*
+static/*

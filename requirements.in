@@ -5,6 +5,7 @@ django-js-routes
 inertia-django
 django-rest-framework
 django-test-plus
+django-loginas
 
 # tools
 fabric
