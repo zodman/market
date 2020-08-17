@@ -19,5 +19,3 @@ class CustomRow(serializers.Serializer):
     quantity = serializers.IntegerField(min_value=1)
     food = serializers.PrimaryKeyRelatedField(queryset=Food.objects.all())
 
-
-

@@ -16,9 +16,11 @@ const app = document.getElementById('app');
 const page = JSON.parse(document.getElementById("page").textContent);
 
 import Index from "./Pages/Index";
+import Login from "./Pages/Login";
 
 const pages = {
   'Index': Index,
+  'Login': Login,
 }
 
 

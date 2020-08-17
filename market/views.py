@@ -12,6 +12,10 @@ from .serializers import FoodSerializer, OrderSerializer
 from .serializers import CustomRow
 
 
+def login(request):
+    return render_inertia(request, "Index", {})
+
+
 def index(request):
     foods = Food.objects.all()
     context = {
