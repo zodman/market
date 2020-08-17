@@ -10,6 +10,7 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = ("cart", "total", "user")
 
 
+
 class FoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food

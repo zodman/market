@@ -1,11 +1,12 @@
 <template>
 <div class="container">
-
+  <flash-messages />
+  <h1 class="subtitle">Cart</h1>
         <div class="field is-grouped">
             <div class="control ">
               <div class="select">
                 <select v-model="foodSelected">
-                  <option v-for="food in foods" >{{food.name}}</option>
+                  <option v-for="food in foods" v-bind:value="food" >{{food.name}}</option>
                 </select>
               </div>
             </div>
@@ -54,15 +55,20 @@
 
 <script>
 
+import FlashMessages from './_Flash'
+
 const fit = (number) => {
- return parseFloat(number).toFixed(2);
+  return parseFloat(number).toFixed(2);
 }
 
 export default {
- name: 'Index',
- props: {
-  foods: Array
- },
+  name: 'Index',
+  props: {
+    foods: Array
+  },
+  components:{
+    FlashMessages
+  },
   data() {
     return {
       foodSelected: false,

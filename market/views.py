@@ -1,6 +1,7 @@
 from rest_framework import generics
 from django.shortcuts import render
 from inertia.views import render_inertia
+from inertia.share import share_flash
 from .models import Food, Order
 from .serializers import FoodSerializer, OrderSerializer
 
@@ -8,8 +9,8 @@ from .serializers import FoodSerializer, OrderSerializer
 def index(request):
     foods = Food.objects.all()
     context = {"foods": FoodSerializer(foods, many=True).data}
+    share_flash(request, "error", error=True)
     return render_inertia(request, "Index", context)
-
 
 class OrderList(generics.ListAPIView):
     serializer_class = OrderSerializer
