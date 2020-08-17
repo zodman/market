@@ -11,7 +11,6 @@ class MixBase:
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
 class Food(MixBase, models.Model):
     FOOD_TYPES = (
         ("meat", "Meat"),

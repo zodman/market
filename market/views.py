@@ -2,13 +2,14 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
 from inertia.views import render_inertia
 from inertia.share import share_flash
 from django.shortcuts import redirect
 from .models import Food, Order, Cart, CartRow
 from .serializers import FoodSerializer, OrderSerializer
 from .serializers import CustomRow
-
 
 
 def index(request):
@@ -22,6 +23,7 @@ def index(request):
 
 
 class CreateCart(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
         rows = CustomRow(data=request.data, many=True)
         if not request.user.is_authenticated:
@@ -29,7 +31,6 @@ class CreateCart(APIView):
             return redirect("market:index")
         if not rows.is_valid():
             share_flash(request, error=f"Failed to create and order")
-            #return Response(rows.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             cart = Cart.objects.create()
             for entry in rows.data:
@@ -49,9 +50,16 @@ class CreateCart(APIView):
 
 class OrderList(generics.ListAPIView):
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['user__username', "cart__rows__name", "cart__rows__type"]
 
     def get_queryset(self):
-        qs = Order.objects.all()
+        if self.request.user.is_superuser:
+            qs = Order.objects.all()
+        else:
+            qs = Order.objects.filter(user=self.request.user)
+
         status_param = self.request.query_params.get("status", None)
         if status_param:
             qs = qs.filter(status=status_param)
@@ -62,8 +70,13 @@ class OrderList(generics.ListAPIView):
 
 
 class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Order.objects.all()
+        return Order.objects.filter(user=self.request.user)
 
 
 create_cart = CreateCart.as_view()

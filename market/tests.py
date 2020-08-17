@@ -29,6 +29,9 @@ class OrderTestApi(TestCase):
         seed.execute()
         self.seed = seed
         self.user = self.make_user()
+        self.admin = self.make_user(username="admin")
+        self.admin.is_superuser = True
+        self.admin.save()
 
     def test_create_cart(self):
         foods = Food.objects.all()
@@ -37,7 +40,6 @@ class OrderTestApi(TestCase):
             data_list.append(dict(food=f.id, 
                     quantity=self.seed.faker.random_digit_not_null()))
         data = data_list
-
         total = sum(map(
             lambda x: 
                 x["quantity"]*Food.objects.get(id=x["food"]).price,
@@ -59,51 +61,61 @@ class OrderTestApi(TestCase):
 
     def test_not_update_order_fields(self):
         """ We only can update the status"""
+        user = self.make_user(username="temp1")
         order = Order.objects.all()[0]
         order.total = 1
+        order.user = user
         order.save()
-        user = self.make_user(username="temp1")
         data = {
-            "user": user.id,
+            "user": self.user.id,
             "total": 0.01,
         }
-        self.put("market:order_detail", pk=order.id, data=data)
+        with self.login(username=user.username):
+            self.put("market:order_detail", pk=order.id, data=data)
         newobj = self.last_response.json()
         self.assertTrue(float(newobj["total"]) != 1.0, newobj)
-        self.assertTrue(newobj["user"] != user.id)
+        self.assertTrue(newobj["user"] == user.id)
 
     def test_update_status_order(self):
         """ update the status of the order"""
         order = Order.objects.all()[0]
+        order.user = self.user
+        order.save()
         data = {"status": "c"}
-        self.put("market:order_detail", pk=order.id, data=data)
+        with self.login(username=self.user.username):
+            self.put("market:order_detail", pk=order.id, data=data)
         self.assert_http_200_ok()
         sameorder = Order.objects.get(id=order.id)
         self.assertTrue(sameorder.status == "c")
 
     def test_list_orders(self):
         """ list orders by status and user """
-        self.get_check_200("market:order_list")
+        with self.login(username=self.admin.username):
+            self.get_check_200("market:order_list")
         self.assertTrue(len(self.last_response.json()) > 10)
         order = Order.objects.all()[0]
         order.status = "s"
         order.user = self.user
         order.save()
-        url = self.reverse("market:order_list")
-        self.get_check_200(f"{url}?status=s")
-        self.assertTrue(len(self.last_response.json()) == 1)
+        with self.login(username=self.admin.username): 
+            url = self.reverse("market:order_list")
+            self.get_check_200(f"{url}?status=s")
+            self.assertTrue(len(self.last_response.json()) == 1)
 
-        self.get_check_200(f"{url}?user={self.user.username}")
-        self.assertTrue(len(self.last_response.json()) == 1)
+            self.get_check_200(f"{url}?user={self.user.username}")
+            self.assertTrue(len(self.last_response.json()) == 1)
 
     def test_detail_destroy_order(self):
         """ We can delete orders"""
         qs = Order.objects.all()
         count = qs.count()
         order = qs[0]
-        self.get("market:order_detail", pk=order.id)
-        self.assert_http_200_ok()
-        self.delete("market:order_detail", pk=order.id)
-        self.response_204()
+        order.user = self.admin
+        order.save()
+        with self.login(username=self.admin.username):
+            self.get("market:order_detail", pk=order.id)
+            self.assert_http_200_ok()
+            self.delete("market:order_detail", pk=order.id)
+            self.response_204()
         newcount = Order.objects.all().count()
         self.assertTrue(count != newcount, (count, newcount))
