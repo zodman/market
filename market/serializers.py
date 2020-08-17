@@ -6,7 +6,8 @@ from .models import Food, Order
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ["cart","total", "user"]
+        fields = ["id", "cart", "status", "total", "user"]
+        read_only_fields = ("cart", "total", "user")
 
 
 class FoodSerializer(serializers.ModelSerializer):

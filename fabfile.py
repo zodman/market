@@ -35,4 +35,3 @@ def deploy(ctx):
             ctx.run("pip install -r requirements.txt")
             ctx.run("python manage.py migrate")
     ctx.run("sudo supervisorctl restart market")
-

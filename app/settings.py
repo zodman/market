@@ -113,10 +113,7 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {"console": {"class": "logging.StreamHandler",},},
-    "root": {
-        "handlers": ["console"], 
-         "level": "INFO",
-    },
+    "root": {"handlers": ["console"], "level": "INFO",},
     "loggers": {
         "market.models": {
             "handlers": ["console"],
@@ -125,11 +122,10 @@ LOGGING = {
         },
     },
 }
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 JS_ROUTES_INCLUSION_LIST = [
-    'market',
+    "market",
 ]
-

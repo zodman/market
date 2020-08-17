@@ -17,51 +17,165 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Cart',
+            name="Cart",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
             ],
             bases=(market.models.MixBase, models.Model),
         ),
         migrations.CreateModel(
-            name='Food',
+            name="Food",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('type', models.CharField(choices=[('meat', 'Meat'), ('fruit', 'Fruit'), ('vegetable', 'Vegatable'), ('desert', 'Desert'), ('dairy', 'Dairy'), ('beverage', 'Beverage'), ('bread', 'Bread')], max_length=11)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=8)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("meat", "Meat"),
+                            ("fruit", "Fruit"),
+                            ("vegetable", "Vegatable"),
+                            ("desert", "Desert"),
+                            ("dairy", "Dairy"),
+                            ("beverage", "Beverage"),
+                            ("bread", "Bread"),
+                        ],
+                        max_length=11,
+                    ),
+                ),
+                ("price", models.DecimalField(decimal_places=2, max_digits=8)),
             ],
             bases=(market.models.MixBase, models.Model),
         ),
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(choices=[('n', 'New'), ('s', 'Send'), ('r', 'Received'), ('c', 'Cancelled')], default='n', max_length=1)),
-                ('total', models.DecimalField(decimal_places=2, editable=False, max_digits=8)),
-                ('cart', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='market.cart')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("n", "New"),
+                            ("s", "Send"),
+                            ("r", "Received"),
+                            ("c", "Cancelled"),
+                        ],
+                        default="n",
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "total",
+                    models.DecimalField(decimal_places=2, editable=False, max_digits=8),
+                ),
+                (
+                    "cart",
+                    models.OneToOneField(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="market.cart",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             bases=(market.models.MixBase, models.Model),
         ),
         migrations.CreateModel(
-            name='CartRow',
+            name="CartRow",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField(default=1, validators=[django.core.validators.MinValueValidator(limit_value=1)])),
-                ('price', models.DecimalField(decimal_places=2, default=0, editable=False, max_digits=8, verbose_name='Unit price')),
-                ('food_order', models.PositiveIntegerField(db_index=True, default=0, editable=False)),
-                ('cart', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='cart_rows', to='market.cart')),
-                ('food', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='cart_foods', to='market.food')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "quantity",
+                    models.PositiveIntegerField(
+                        default=1,
+                        validators=[
+                            django.core.validators.MinValueValidator(limit_value=1)
+                        ],
+                    ),
+                ),
+                (
+                    "price",
+                    models.DecimalField(
+                        decimal_places=2,
+                        default=0,
+                        editable=False,
+                        max_digits=8,
+                        verbose_name="Unit price",
+                    ),
+                ),
+                (
+                    "food_order",
+                    models.PositiveIntegerField(
+                        db_index=True, default=0, editable=False
+                    ),
+                ),
+                (
+                    "cart",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="cart_rows",
+                        to="market.cart",
+                    ),
+                ),
+                (
+                    "food",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="cart_foods",
+                        to="market.food",
+                    ),
+                ),
             ],
-            options={
-                'ordering': ['food_order'],
-            },
+            options={"ordering": ["food_order"],},
             bases=(market.models.MixBase, models.Model),
         ),
         migrations.AddField(
-            model_name='cart',
-            name='rows',
-            field=models.ManyToManyField(related_name='carts', through='market.CartRow', to='market.Food'),
+            model_name="cart",
+            name="rows",
+            field=models.ManyToManyField(
+                related_name="carts", through="market.CartRow", to="market.Food"
+            ),
         ),
     ]

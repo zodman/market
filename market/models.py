@@ -17,18 +17,17 @@ class MixBase:
 
 class Food(MixBase, models.Model):
     FOOD_TYPES = (
-        ('meat', 'Meat'),
-        ('fruit', 'Fruit'),
-        ('vegetable', 'Vegatable'),
-        ('desert', 'Desert'),
-        ('dairy', 'Dairy'),
-        ('beverage', 'Beverage'),
-        ('bread', 'Bread'),
+        ("meat", "Meat"),
+        ("fruit", "Fruit"),
+        ("vegetable", "Vegatable"),
+        ("desert", "Desert"),
+        ("dairy", "Dairy"),
+        ("beverage", "Beverage"),
+        ("bread", "Bread"),
     )
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=11, choices=FOOD_TYPES)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-
 
     class Meta:
         ordering = ("name",)
@@ -38,19 +37,28 @@ class Food(MixBase, models.Model):
 
 
 class CartRow(MixBase, models.Model):
-    food = models.ForeignKey("Food", related_name="cart_foods",
-                             on_delete=models.SET_NULL, null=True)
-    cart = models.ForeignKey("Cart", related_name="cart_rows",
-                             on_delete=models.SET_NULL, null=True)
-    quantity = models.PositiveIntegerField(default=1,
-                                           validators=[MinValueValidator(limit_value=1)])
-    price = models.DecimalField(max_digits=8, decimal_places=2, default=0,
-                                editable=False, verbose_name="Unit price")
-    food_order = models.PositiveIntegerField(default=0, editable=False,
-                                             db_index=True)
+    food = models.ForeignKey(
+        "Food", related_name="cart_foods", on_delete=models.SET_NULL, null=True
+    )
+    cart = models.ForeignKey(
+        "Cart", related_name="cart_rows", on_delete=models.SET_NULL, null=True
+    )
+    quantity = models.PositiveIntegerField(
+        default=1, validators=[MinValueValidator(limit_value=1)]
+    )
+    price = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=0,
+        editable=False,
+        verbose_name="Unit price",
+    )
+    food_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     class Meta:
-        ordering = ["food_order", ]
+        ordering = [
+            "food_order",
+        ]
 
     def __str__(self):
         return "CartRow {}".format(self.id)
@@ -63,6 +71,7 @@ def pre_save_row(sender, **kwargs):
     instance.price = instance.food.price
     return instance
 
+
 @receiver(post_save, sender=CartRow)
 def post_save_row(sender, **kwargs):
     # update the total price of the order
@@ -70,12 +79,15 @@ def post_save_row(sender, **kwargs):
     instance.cart.order.update_total()
     instance.cart.order.save()
 
+
 class Cart(MixBase, models.Model):
-    rows = models.ManyToManyField(Food, related_name="carts", through=CartRow,
-                                  through_fields=("cart", "food"))
+    rows = models.ManyToManyField(
+        Food, related_name="carts", through=CartRow, through_fields=("cart", "food")
+    )
 
     def __str__(self):
         return "Cart {}".format(self.id)
+
 
 @receiver(post_save, sender=Cart)
 def create_order(sender, **kwargs):
@@ -85,27 +97,27 @@ def create_order(sender, **kwargs):
         order = Order(cart=instance)
         order.save()
 
+
 class Order(MixBase, models.Model):
-    NEW = 'n'
-    SEND = 's'
-    RECEIVED = 'r'
-    CANCELLED = 'c'
+    NEW = "n"
+    SEND = "s"
+    RECEIVED = "r"
+    CANCELLED = "c"
     STATUS = (
-        (NEW, 'New'),
-        (SEND, 'Send'),
-        (RECEIVED, 'Received'),
-        (CANCELLED, 'Cancelled'),
+        (NEW, "New"),
+        (SEND, "Send"),
+        (RECEIVED, "Received"),
+        (CANCELLED, "Cancelled"),
     )
     cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=1, choices=STATUS, default=NEW)
-    total = models.DecimalField(max_digits=8, decimal_places=2, editable=False) 
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
-                             blank=True)
+    total = models.DecimalField(max_digits=8, decimal_places=2, editable=False)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def update_total(self):
         total = Decimal(0)
         for row in self.cart.cart_rows.all():
-            total += row.quantity*row.price
+            total += row.quantity * row.price
         self.total = total
 
     def __str__(self):
