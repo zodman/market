@@ -37,28 +37,15 @@ class Food(MixBase, models.Model):
 
 
 class CartRow(MixBase, models.Model):
-    food = models.ForeignKey(
-        "Food", related_name="cart_foods", on_delete=models.SET_NULL, null=True
-    )
-    cart = models.ForeignKey(
-        "Cart", related_name="cart_rows", on_delete=models.SET_NULL, null=True
-    )
+    food = models.ForeignKey("Food", related_name="cart_foods",
+                             on_delete=models.SET_NULL, null=True)
+    cart = models.ForeignKey("Cart", related_name="cart_rows",
+                             on_delete=models.SET_NULL, null=True)
     quantity = models.PositiveIntegerField(
-        default=1, validators=[MinValueValidator(limit_value=1)]
-    )
-    price = models.DecimalField(
-        max_digits=8,
-        decimal_places=2,
-        default=0,
-        editable=False,
-        verbose_name="Unit price",
-    )
-    food_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
-
-    class Meta:
-        ordering = [
-            "food_order",
-        ]
+                                default=1,
+                                validators=[MinValueValidator(limit_value=1)])
+    price = models.DecimalField(max_digits=8, decimal_places=2, default=0,
+                                verbose_name="Unit price")
 
     def __str__(self):
         return "CartRow {}".format(self.id)

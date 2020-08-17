@@ -7,7 +7,7 @@ from django.utils.html import format_html
 class RowInline(admin.TabularInline):
     model = CartRow
     raw_id_fields = ("food",)
-    readonly_fields = ("price", "row_price")
+    readonly_fields = ("row_price", )
     extra = 1
 
     def row_price(self, obj):
