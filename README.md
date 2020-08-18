@@ -27,6 +27,8 @@ Food, Cart, Order
 Demo: http://market.python3.ninja
 
 
+Note: The user superuser can view all the cart of all users.
+
 # Main tools used:
 
 * django-restframework
@@ -38,16 +40,13 @@ More details on [requirements.in](requirements.in) and
 [package.json](package.json)
 
 
-# Populate the database with foods
-
-`python populate.py`
 
 # Install
 Create a virtualenv
 
 `pip install -r requirementst.xt`
 
-Init the database:
+Init the database and populate foods:
 
 `fab reinit`
 
