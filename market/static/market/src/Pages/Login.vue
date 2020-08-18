@@ -9,7 +9,7 @@
                     <p class="subtitle has-text-grey">Please login to proceed.</p>
                     <div class="box">
                         <figure class="avatar">
-                            <img src="https://placekitten.com/128/128">
+                            <img src="//i.imgur.com/jSMRijNs.jpg">
                         </figure>
 										<form @submit.prevent="submit">
                        <div class="field">
@@ -30,9 +30,6 @@
                       </button>	
 										</form>
 										</div>
-                          <p class="has-text-grey">
-                            <inertia-link :href="route('market:index')">Go to Index</inertia-link>
-                          </p>
                 </div>
             </div>
         </div>

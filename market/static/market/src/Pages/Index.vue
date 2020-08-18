@@ -1,7 +1,8 @@
 <template>
 <div class="container">
   <flash-messages />
-    <h1 class="subtitle">Cart of {{user}} <small><inertia-link :href="route('market:logout')">logout</inertia-link> </small></h1>
+    <tabs></tabs>
+    <h1 class="subtitle my-3">Cart of {{user}} </h1>
         <div class="field is-grouped">
             <div class="control ">
               <div class="select">
@@ -51,18 +52,14 @@
       </td>
     </tr>
   </table>
-    <a href="/admin" target="_blank">Go to Admin</a>
 </div>
 
 </template>
 
 <script>
-
-import FlashMessages from './_Flash'
-
-const fit = (number) => {
-  return parseFloat(number).toFixed(2);
-}
+import FlashMessages from './_Flash';
+import Tabs from './_Tabs';
+import utils from '../utils';
 
 export default {
   name: 'Index',
@@ -71,7 +68,8 @@ export default {
     user: String
   },
   components:{
-    FlashMessages
+    FlashMessages,
+    Tabs
   },
   data() {
     return {
@@ -83,7 +81,7 @@ export default {
   },
   methods:{
     calcPrice(food) {
-      return fit(food.price*food.quantity);
+      return utils.fit(food.price*food.quantity);
     },
     removeQuantity(food) {
       if (food.quantity > 1) {
@@ -110,7 +108,7 @@ export default {
     updateTotal(){
       let rowsTotal = this.rows.map(e => e.quantity*e.price);
       // TODO: fix the biggerFloat
-      this.bigTotal = fit(rowsTotal.reduce( (a,b) => a+b));
+      this.bigTotal = utils.fit(rowsTotal.reduce( (a,b) => a+b));
     },
     submitOrder() {
       this.sending = true;

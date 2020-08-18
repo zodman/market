@@ -39,6 +39,15 @@ def login(request):
 
 
 @login_required
+def orders(request):
+    orders = Order.objects.filter(user=request.user)
+    props = {
+        'orders': OrderSerializer(orders, many=True).data,
+        'status': dict(Order.STATUS),
+    }
+    return render_inertia(request, "ListOrder", props)
+
+@login_required
 def index(request):
     foods = Food.objects.all()
     context = {
@@ -101,6 +110,11 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
         if self.request.user.is_superuser:
             return Order.objects.all()
         return Order.objects.filter(user=self.request.user)
+
+    def finalize_response(self, request, *args, **kwargs):
+        response = super().finalize_response(request, *args, **kwargs)
+        response['x-inertia'] = True
+        return response
 
 
 create_cart = CreateCart.as_view()

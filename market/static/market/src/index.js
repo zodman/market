@@ -17,10 +17,12 @@ const page = JSON.parse(document.getElementById("page").textContent);
 
 import Index from "./Pages/Index";
 import Login from "./Pages/Login";
+import ListOrder from "./Pages/ListOrder.vue";
 
 const pages = {
   'Index': Index,
   'Login': Login,
+  'ListOrder': ListOrder,
 }
 
 
@@ -29,7 +31,6 @@ new Vue({
     props: {
       initialPage: page,
       resolveComponent: (name) => {
-//        console.log("resolveComponent ", name)
         return pages[name];
       },
     },
