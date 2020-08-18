@@ -1,7 +1,5 @@
 from rest_framework import generics
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 from inertia.views import render_inertia
@@ -47,6 +45,7 @@ def orders(request):
     }
     return render_inertia(request, "ListOrder", props)
 
+
 @login_required
 def index(request):
     foods = Food.objects.all()
@@ -63,7 +62,7 @@ class CreateCart(APIView):
     def post(self, request, format=None):
         rows = CustomRow(data=request.data, many=True)
         if not rows.is_valid():
-            share_flash(request, error=f"Failed to create and order")
+            share_flash(request, error="Failed to create and order")
         else:
             cart = Cart.objects.create()
             for entry in rows.data:

@@ -2,11 +2,11 @@ from test_plus.test import TestCase
 from rest_framework.test import APIClient
 from django_seed import Seed
 from .models import Food, Order, Cart, CartRow
-import json
 
 
 class ModelTest(TestCase):
     client_class = APIClient
+
     def setUp(self):
         seed = Seed.seeder()
         seed.add_entity(Food, 10)
@@ -53,20 +53,14 @@ class OrderTestApi(TestCase):
         foods = Food.objects.all()
         data_list = []
         for f in foods:
-            data_list.append(dict(food=f.id, 
+            data_list.append(dict(
+                    food=f.id,
                     quantity=self.seed.faker.random_digit_not_null()))
         data = data_list
-        total = sum(map(
-            lambda x: 
-                x["quantity"]*Food.objects.get(id=x["food"]).price,
-            data))
         with self.login(username=self.user.username):
-            self.post("market:create_cart", data=data, 
-                        extra={'format':'json'})
+            self.post("market:create_cart", data=data,
+                      extra={'format': 'json'})
             self.response_302()
-        # response = self.last_response.json()
-        # self.assertTrue(response["user"]== self.user.id)
-        # self.assertTrue(Decimal(response["total"])==total)
 
     def test_check_orders(self):
         """ check if the index works with inertia"""
@@ -114,7 +108,7 @@ class OrderTestApi(TestCase):
         order.status = "s"
         order.user = self.user
         order.save()
-        with self.login(username=self.admin.username): 
+        with self.login(username=self.admin.username):
             url = self.reverse("market:order_list")
             self.get_check_200(f"{url}?status=s")
             self.assertTrue(len(self.last_response.json()) == 1)

@@ -1,14 +1,12 @@
 import os
 import logging
+import django
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
-import django
-from django.conf import settings
-
 django.setup()
+
 from django_seed import Seed
 from market.models import Food
 from django.contrib.auth.models import User
@@ -63,7 +61,7 @@ foodNames = set([
 def init_data():
     seeder = Seed.seeder()
     seeder.add_entity(
-        Food, 20, {"name": lambda x:foodNames.pop()}
+        Food, 20, {"name": lambda x: foodNames.pop()}
     )
     result = seeder.execute()
     log.info(f"Initialize db with Foods created: {len(result[Food])}")
@@ -71,7 +69,8 @@ def init_data():
 
 def init_admin():
     if not User.objects.filter(username="admin").exists():
-        created = User.objects.create_superuser("admin", "admin@example.com", "admin")
+        args = ("admin", "admin@example.com", "admin")
+        created = User.objects.create_superuser(*args)
         log.info(f"superuser created {created}")
 
 

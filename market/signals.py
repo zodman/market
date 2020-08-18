@@ -33,4 +33,3 @@ def post_save_row(sender, **kwargs):
     instance = kwargs.get("instance")
     instance.cart.order.update_total()
     instance.cart.order.save()
-

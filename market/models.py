@@ -11,6 +11,7 @@ class MixBase:
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class Food(MixBase, models.Model):
     FOOD_TYPES = (
         ("meat", "Meat"),
@@ -47,7 +48,6 @@ class CartRow(MixBase, models.Model):
         return "CartRow {}".format(self.id)
 
 
-
 class Cart(MixBase, models.Model):
     rows = models.ManyToManyField(
         Food, related_name="carts", through=CartRow,
@@ -72,7 +72,8 @@ class Order(MixBase, models.Model):
     cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=1, choices=STATUS, default=NEW)
     total = models.DecimalField(max_digits=8, decimal_places=2, editable=False)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL,
+                             null=True, blank=True)
 
     def update_total(self):
         total = Decimal(0)
@@ -83,6 +84,3 @@ class Order(MixBase, models.Model):
 
     def __str__(self):
         return "Order {}".format(self.id)
-
-
-
