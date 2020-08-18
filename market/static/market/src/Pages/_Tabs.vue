@@ -15,6 +15,9 @@
         <li>
           <a href="/admin" target="_blank">Go to Admin</a>
         </li>
+        <li>
+          <a target="_blank" href="/api/orders">API</a>
+        </li>
       </ul>
     </div>
   </div>

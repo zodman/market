@@ -70,5 +70,6 @@ $ npm run dev
 This will fire concurrently the parcel watch and runserver 
 
 
+visit http://localhost:8000/
 
 
