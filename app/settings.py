@@ -14,7 +14,7 @@ SECRET_KEY = "fqr4y_!mdpahbeeupmokt!$xtg#zye2^6p64k(gkmt#fj82zx+"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "market.python3.ninja"]
+ALLOWED_HOSTS = ["localhost", "market.python3.ninja", "market.opensrc.mx" ]
 
 
 # Application definition

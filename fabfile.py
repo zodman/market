@@ -28,6 +28,7 @@ def log(ctx):
 @task
 def deploy(ctx):
     run("npm install", echo=True)
+    run("rm -rf market/static/dist/", echo=True)
     run("npm run build", echo=True)
     run("python manage.py collectstatic --noinput", echo=True)
     run("find . -name '__pycache__' |xargs rm -rf ", echo=True)
