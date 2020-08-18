@@ -114,8 +114,8 @@ STATIC_URL = "/static/"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler",},},
-    "root": {"handlers": ["console"], "level": "INFO",},
+    "handlers": {"console": {"class": "logging.StreamHandler", }, },
+    "root": {"handlers": ["console"], "level": "INFO", },
     "loggers": {
         "market": {
             "handlers": ["console"],
@@ -136,11 +136,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
     ),
-    # "DEFAULT_PERMISSION_CLASSES": (
-       # "rest_framework.permissions.IsAuthenticatedOrReadOnly",
-    # ),
 }
-
 # Login redirect
-LOGIN_URL="/login"
-
+LOGIN_URL = "/login"
