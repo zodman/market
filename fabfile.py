@@ -7,7 +7,7 @@ exclude_dirs = [".git", "node_modules", ".cache", ".github", "db.sqlite3"]
 
 @task
 def reinit(ctx):
-    run("rm db.sqlite3")
+    run("rm -rf db.sqlite3")
     run("python manage.py migrate")
     run("python populate.py")
 
