@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <flash-messages />
-    <h1 class="subtitle">Cart of {{user}} <small><inertia-link :href="route('market:logout')">logout</inertia-link></small></h1>
+    <h1 class="subtitle">Cart of {{user}} <small><inertia-link :href="route('market:logout')">logout</inertia-link> </small></h1>
         <div class="field is-grouped">
             <div class="control ">
               <div class="select">
@@ -51,6 +51,7 @@
       </td>
     </tr>
   </table>
+    <a href="/admin" target="_blank">Go to Admin</a>
 </div>
 
 </template>
