@@ -16,6 +16,7 @@ def reinit(ctx):
 def test(c):
     run(" coverage run manage.py test --failfast")
     run("coverage report -m ")
+    run("coverage html ")
 
 
 @task

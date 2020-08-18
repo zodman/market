@@ -53,9 +53,6 @@ class CreateCart(APIView):
 
     def post(self, request, format=None):
         rows = CustomRow(data=request.data, many=True)
-        if not request.user.is_authenticated:
-            share_flash(request, error="User not auth")
-            return redirect("market:index")
         if not rows.is_valid():
             share_flash(request, error=f"Failed to create and order")
         else:
