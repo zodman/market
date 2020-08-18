@@ -108,7 +108,11 @@ export default {
     updateTotal(){
       let rowsTotal = this.rows.map(e => e.quantity*e.price);
       // TODO: fix the biggerFloat
-      this.bigTotal = utils.fit(rowsTotal.reduce( (a,b) => a+b));
+      if( this.rows.length > 0 ) {
+        this.bigTotal = utils.fit(rowsTotal.reduce( (a,b) => a+b));
+      } else {
+        this.bigTotal = 0;
+      }
     },
     submitOrder() {
       this.sending = true;
