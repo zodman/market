@@ -21,6 +21,7 @@ def test(c):
 
 @task
 def log(ctx):
+    run("rm requirements.txt")
     run("pip-compile requirements.in -o requirements.txt")
 
 

@@ -22,10 +22,10 @@ django==3.1               # via -r requirements.in, django-js-routes, django-see
 djangorestframework==3.11.1  # via django-rest-framework
 docopt==0.6.2             # via coveralls
 fabric==2.5.0             # via -r requirements.in, patchwork
-faker==4.1.1              # via django-seed
+faker==4.1.2              # via django-seed
 gunicorn==20.0.4          # via django-webserver
 idna==2.10                # via requests
-inertia-django==0.2.6     # via -r requirements.in
+inertia-django==0.2.7     # via -r requirements.in
 invoke==1.4.1             # via fabric
 paramiko==2.7.1           # via fabric
 patchwork==1.0.1          # via -r requirements.in
