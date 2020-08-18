@@ -24,3 +24,5 @@ The django admin had 3 catalogs:
 
 Food, Cart, Order
 
+Demo: http://market.python3.ninja
+
